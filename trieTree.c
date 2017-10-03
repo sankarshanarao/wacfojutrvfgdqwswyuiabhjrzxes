@@ -105,26 +105,62 @@ void insert_all_nodes(struct TrieNode *root)
     fclose(fp);
 }
 
-void generate_words(char s[])
+void strperms(struct TrieNode * root,int *hashish,char * wsf)
 {
+    if(root->isEndOfWord)
+        printf(wsf);
+    for(int i=0;i<26;i++)
+    {
+        if(hashish[i])
+        {
+            hashish[i]--;
+            for(int j=0;wsf[j]!='\0';j++);
+            wsf[j]=hashish[i];
+            wsf[j+1]='\0';
+            strperms(root->children[i],hashish,wsf);
+            wsf[j]='\0';
+            hashish[i]++;
+
+        }
+    }
+}
+
+
+void generate_words(struct TrieNode * root, char s[])
+{
+    int hashish[26];
+    char wsf[100];
+    strcpy()
+    for(int i=0;i<26;i++)
+        hashish[i]=0;
+    for(int i=0;s[i]!='\0';i++)
+        hashish[s[i]-'a']++;
+
+
+
 
 }
+
+
 
 // Driver
 int main()
 {
-    int count=0;
+//    int count=0;
     struct TrieNode *root = getNode();
     insert_all_nodes(root);
-    char str[30],inp[30];
-    do
-    {
-        puts("\nEnter the word to be searched:");
-        gets(inp);
-        if(search(root,inp))
-            printf("%s is found\n",inp);
-        else
-            printf("Not found\n");
-    }while(1);
-    return 0;
+//    char str[30],inp[30];
+//    do
+//    {
+//        puts("\nEnter the word to be searched:");
+//        gets(inp);
+//        if(search(root,inp))
+//            printf("%s is found\n",inp);
+//        else
+//            printf("Not found\n");
+//    }while(1);
+//    return 0;
+    generate_words(root,"poop");
 }
+
+
