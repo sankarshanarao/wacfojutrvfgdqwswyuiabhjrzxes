@@ -105,40 +105,51 @@ void insert_all_nodes(struct TrieNode *root)
     fclose(fp);
 }
 
-void strperms(struct TrieNode * root,int *hashish,char * wsf)
+char * addInEnd(char * str, char ch)
 {
-    if(root->isEndOfWord)
-        printf(wsf);
-    for(int i=0;i<26;i++)
-    {
-        if(hashish[i])
+    int len;
+    for(len=0;str[len]!='\0';len++);
+    str[len]=ch;
+    str[len+1]='\0';
+    return str;
+}
+
+void removeFromEnd(char * s)
+{
+    int len;
+    for(len=0;s[len]!='\0';++len);
+    s[len-1]='\0';
+}
+
+void strperms(struct TrieNode * noode,int *hashish,char * wsf)
+{
+    if(noode->isEndOfWord)
+        printf("%s\n",wsf);
+
+    for(int i=0;i<ALPHABET_SIZE;++i)
+        if(hashish[i]!=0 && noode->children[i]!=NULL)
         {
             hashish[i]--;
-            for(int j=0;wsf[j]!='\0';j++);
-            wsf[j]=hashish[i];
-            wsf[j+1]='\0';
-            strperms(root->children[i],hashish,wsf);
-            wsf[j]='\0';
+            strperms(noode->children[i],hashish,addInEnd(wsf,i+'a'));
             hashish[i]++;
-
+            removeFromEnd(wsf);
         }
-    }
+    //for(int i=0;i<ALPHABET_SIZE;i++)printf("%d",hashish[i]);
 }
 
 
 void generate_words(struct TrieNode * root, char s[])
 {
-    int hashish[26];
+    int hashish[ALPHABET_SIZE];
     char wsf[100];
-    strcpy()
-    for(int i=0;i<26;i++)
+    strcpy(wsf,"\0");
+    for(int i=0;i<ALPHABET_SIZE;i++)
         hashish[i]=0;
     for(int i=0;s[i]!='\0';i++)
         hashish[s[i]-'a']++;
-
-
-
-
+//    for(int i=0;i<ALPHABET_SIZE;i++)
+//        printf("%d,",hashish[i]);
+    strperms(root,hashish,wsf);
 }
 
 
@@ -149,6 +160,7 @@ int main()
 //    int count=0;
     struct TrieNode *root = getNode();
     insert_all_nodes(root);
+    char s[100]="Stanky";
 //    char str[30],inp[30];
 //    do
 //    {
@@ -160,7 +172,7 @@ int main()
 //            printf("Not found\n");
 //    }while(1);
 //    return 0;
-    generate_words(root,"poop");
+     generate_words(root,"teats");
+
+
 }
-
-
