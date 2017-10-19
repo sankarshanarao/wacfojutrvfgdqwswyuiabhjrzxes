@@ -184,7 +184,7 @@ ELEM* init_board()
 	else{
 		return NULL;
 	}
-	
+
 }
 int * territory(ELEM *board,int play,int *length,int * arr)
 {
@@ -201,26 +201,28 @@ int * territory(ELEM *board,int play,int *length,int * arr)
 	return arr;
 }
 
-void place_it_in_board(char * string, ELEM *board,int play)
+void place_it_in_board(char * string, ELEM *board)
 {
 	int length;
 	int * arr;
-	arr = territory(board,play,&length,arr);
-	for(int i =0; i<length;i++)
+	//arr = territory(board,play,&length,arr);
+	/*for(int i =0; i<length;i++)
 	{
 		printf("%d ", *(arr+i*sizeof(int)));
-	}
-	int random = rand()%length;
-	int random_pos = *(arr + sizeof(int)*random);
+	}*/
+	/*
+	int random = rand()%99+1;
+	int random_pos = //*(arr + sizeof(int)*random);
 	//call the recursive function to put the words in the grid
 	while(1){
 		
 	bool sucess = puts_words(string, board, random_pos);//run this and previous line again and again till true
 	if (sucess = true)break;
 	}
+	*/
+	(board+(45)*sizeof(ELEM))->letter = 'E';
 	
-	
-	
+
 }
 
 bool puts_words(char * string, ELEM *board, int pos)
@@ -265,18 +267,10 @@ int main()
     insert_all_nodes(root);
     char s[100]="Stanky";
 	ELEM* board = init_board();
-	for(int i = 0; i<10; i++)
-	{
-		for(int j = 0; j<10;j++)
-		{
-			printf("%c ",(board+(10*i+j)*sizeof(ELEM))->letter );
-		}
-		printf("\n");
-	}
 	if(board==NULL){
 		//I dont know what to do
 	}
-	place_it_in_board("Hello", board,1);
+	place_it_in_board("Hello", board);
 	for(int i = 0; i<10; i++)
 	{
 		for(int j = 0; j<10;j++)
@@ -300,3 +294,4 @@ int main()
 
 
 }
+
