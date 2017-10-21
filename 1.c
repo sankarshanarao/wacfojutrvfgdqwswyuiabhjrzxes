@@ -367,6 +367,129 @@ void place_it_in_board(char * string, ELEM *board)
 
 }
 
+void form_board(ELEM* board,struct TrieNode *root)
+{
+	
+	char letters[6]; 
+	FILE *fp;
+	
+	printf("\nPLAYER 1:Enter 3 letters to form words\n");
+	/*for(int i =0;i<3;i++)
+	{
+		scanf("%c", &letters[i]) ;
+	}
+	*/
+		scanf(" %c", &letters[0]) ;
+		scanf(" %c", &letters[1]) ;
+		scanf(" %c", &letters[2]) ;		
+	printf("\nPLAYER 2:Enter 3 letters to form words\n");
+	/*for(int i =3;i<6;i++)
+	{
+		scanf("%c", &letters[i]);
+	}*/
+		scanf(" %c", &letters[3]) ;
+		scanf(" %c", &letters[4]) ;
+		scanf(" %c", &letters[5]) ;		
+	
+	
+	strcat(letters, "\0");
+	generate_words(root, letters);
+	
+	for(int i =0;i<5;i++)
+	{
+		fp =fopen("test.txt","r+");
+		char line[50];
+	
+		int randnum = rand()%(LEN_OF_FILE-1)+2;
+		int linenumber = 0;
+		//printf("%d ", randnum);
+		
+		while(fgets(line, 60, fp))
+		{
+			//printf("\t loop");
+			++linenumber;
+
+			if(linenumber == randnum)
+			{
+				
+				char word[10];
+				//printf("%s", word);
+				int k = 0;
+				for(int j = 1;line[j]!='\0';j++)
+				{
+				//printf("%c", line[j]);
+				word[k++] = line[j-1];
+				}
+				word[k] = '\0';
+				printf("\t%s\t\n", word);
+				place_it_in_board(word, board);
+				
+			}
+		}
+		fclose(fp);	
+		printf("done");
+		
+	}
+		remove("test.txt");
+	
+	
+}
+
+bool word_check(int pos, char dir, char len, struct TrieNode *root,ELEM *board )
+{
+	char word[10];
+	int j=0;
+	
+	switch(dir)
+		{
+			case 'N':
+					
+					for(int i =pos;j < len;i -= 10)
+					{
+						word[ j++] = (board+(i)*sizeof(ELEM))->letter ;
+						//printf("%s",string);
+						//(board+(i)*sizeof(ELEM))->letter = *(string + j*sizeof(char));
+						//(board + i*sizeof(ELEM))->isWord=1;
+						
+					}
+					
+					break;
+			case 'S':
+					for(int i = pos;j<len;i += 10)
+					{
+						word[ j++] = (board+(i)*sizeof(ELEM))->letter ;
+						//(board + i*sizeof(ELEM))->letter = *(string + j*sizeof(char));
+						//(board + i*sizeof(ELEM))->isWord=1;
+					}
+					
+					break;
+			case 'E':
+					for(int i = pos; j < len ;i+=1)
+					{
+						word[ j++] = (board+(i)*sizeof(ELEM))->letter ;
+						//*(board + i*sizeof(ELEM))->letter = *(string + j*sizeof(char));
+						//(board + i*sizeof(ELEM))->isWord=1;
+					}
+					
+					break;
+			case 'W':
+					for(int i = pos; j < len ; i-= 1)
+					{
+						word[ j++] = (board+(i)*sizeof(ELEM))->letter ;
+						//(board + i*sizeof(ELEM))->letter = *(string + j*sizeof(char));
+						//(board + i*sizeof(ELEM))->isWord=1;
+					}
+					
+					break;
+			
+		}
+		word[j] = '\0';
+		printf("%s\n", word);
+		bool success = search(root, word);
+		success = search(root, "***");
+		if(success = true)printf("success");
+}
+
 // Driver
 int main()
 {
@@ -376,9 +499,8 @@ int main()
     struct TrieNode *root = getNode();
 	
     insert_all_nodes(root);
-	generate_words(root, "asia");
-
-
+	//generate_words(root, "asia");
+	//generate_words(root,"abcdef");
 
 	
 	ELEM *board = init_board();
@@ -387,19 +509,23 @@ int main()
 		//I dont know what to do
 	}
 	
-
 	
+	
+	
+	//form_board(board, root);
+	/*
 	FILE *fp ;
 	
-	char line[50];
 	
 	for(int i =0;i<5;i++)
 	{
 		fp =fopen("test.txt","r+");
-		
+		char line[50];
+	
 		int randnum = rand()%(LEN_OF_FILE-1)+2;
 		int linenumber = 0;
-		printf("%d", randnum);
+		//printf("%d ", randnum);
+		
 		while(fgets(line, 60, fp))
 		{
 			//printf("\t loop");
@@ -407,23 +533,27 @@ int main()
 
 			if(linenumber == randnum)
 			{
-				printf("%s", line);
+				
 				char word[10];
+				printf("%s", word);
 				int k = 0;
 				for(int j = 1;line[j]!='\0';j++)
 				{
 				//printf("%c", line[j]);
 				word[k++] = line[j-1];
-				
 				}
-				strcat(word, "\0");
+				word[k] = '\0';
+				printf("\t%s\t", word);
 				place_it_in_board(word, board);
+				
 			}
 		}
 		fclose(fp);	
 		printf("done");
-	}
 		
+	}
+		remove("test.txt");
+	*/
 	printf("\n");
 	for(int i = 0; i<10;i++){
 		for(int j =0; j<10;j++){
@@ -432,7 +562,7 @@ int main()
 		printf("\n");
 	}
 	
-	
+	word_check(99,'N', 3, root, board);
 	
 //fill the board non words with random letters
 
