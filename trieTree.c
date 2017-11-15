@@ -15,15 +15,22 @@
 #define CHAR_TO_INDEX(c) ((int)c - (int)'a')
 
 // trie node
-struct TrieNode
+typedef struct TrieNode
 {
     struct TrieNode *children[ALPHABET_SIZE];
     // isEndOfWord is true if the node represents
     // end of a word
     bool isEndOfWord;
-};
+}TRIE;
 
+typedef struct elem{
+	char letter;
+	int isTerr;//is -1 and 1 for the resp. players 0 for unnoccupied territory  1 blue  -1 red
+	bool isWord; //whether the element is part of some word or not
+}ELEM;
 // Returns new trie node (initialized to NULLs)
+bool puts_words(char * string, ELEM *board, int pos);
+
 struct TrieNode *getNode(void)
 {
     struct TrieNode *pNode = NULL;
@@ -152,15 +159,126 @@ void generate_words(struct TrieNode * root, char s[])
     strperms(root,hashish,wsf);
 }
 
+ELEM* init_board()
+{
+	ELEM * board = (ELEM *)malloc(sizeof(ELEM)*10*10);
+	if(board){
+	for(int i =0; i < 10; i++)
+	{
+		for(int j = 0; j < 10; j++)
+		{
+			(board+(10*i+j)*sizeof(ELEM))->letter = '*';
+			
+			//printf("%c", (board+(10*i+j)*sizeof(ELEM))->letter);
+			(board+(10*i+j)*sizeof(ELEM))->isWord = 0; // I dont know whether this is neccesary
+			if(i == 0)
+				(board+(10*i+j)*sizeof(ELEM))->isTerr = 1;
+			else if(i==9)
+				(board+(10*i+j)*sizeof(ELEM))->isTerr = -1;
+			else
+				(board+(10*i+j)*sizeof(ELEM))->isTerr = 0;
+		}
+	}
+	return board;
+	}
+	else{
+		return NULL;
+	}
+
+}
+int * territory(ELEM *board,int play,int *length,int * arr)
+{
+	int n=0;
+	for(int i =0; i < 10; i++)
+	{
+		for(int j = 0; j < 10; j++)
+		{
+			if((board+(10*i+j)*sizeof(ELEM))->isTerr == play);
+				*(arr+(10*i+j)*sizeof(int)) = 10*i+j;
+		}
+	}
+	*length= n;
+	return arr;
+}
+
+void place_it_in_board(char * string, ELEM *board)
+{
+	int length;
+	int * arr;
+	//arr = territory(board,play,&length,arr);
+	/*for(int i =0; i<length;i++)
+	{
+		printf("%d ", *(arr+i*sizeof(int)));
+	}*/
+	/*
+	int random = rand()%99+1;
+	int random_pos = //*(arr + sizeof(int)*random);
+	//call the recursive function to put the words in the grid
+	while(1){
+		
+	bool sucess = puts_words(string, board, random_pos);//run this and previous line again and again till true
+	if (sucess = true)break;
+	}
+	*/
+	(board+(45)*sizeof(ELEM))->letter = 'E';
+	
+
+}
+
+bool puts_words(char * string, ELEM *board, int pos)
+{
+	
+	
+	
+	if(!(*(board+(pos)*sizeof(ELEM))).isWord)
+	{
+		(*(board+(pos)*sizeof(ELEM))).letter = *string;
+		string+=1;
+		if(*string=='\0')return true;
+		int num ;
+		//if(!*(board+(pos+10)*sizeof(ELEM))->isWord)
+		while(1)
+		{			
+			num  = rand()%3;
+			if(!(*(board+(pos+10)*sizeof(ELEM))).isWord && !(*(board+(pos+1)*sizeof(ELEM))).isWord && !(*(board+(pos-1)*sizeof(ELEM))).isWord){return false;}
+			switch(num)
+			{
+				case 0: if(!(board+(pos+10)*sizeof(ELEM))->isWord) //up
+				{pos+=10;	break;}
+				case 1: if(!(board+(pos+1)*sizeof(ELEM))->isWord)//right
+				{pos+=1;	break;}
+				/*case 2: if(!(board+(pos-1)*sizeof(ELEM))->isWord)//left
+				{pos-=1;	break;}*/
+			
+			}
+		}
+		bool sucess = puts_words(string, board, pos);
+			return sucess;
+	}
+}
 
 
 // Driver
 int main()
 {
 //    int count=0;
+	srand(time(NULL));
     struct TrieNode *root = getNode();
     insert_all_nodes(root);
     char s[100]="Stanky";
+	ELEM* board = init_board();
+	if(board==NULL){
+		//I dont know what to do
+	}
+	place_it_in_board("Hello", board);
+	for(int i = 0; i<10; i++)
+	{
+		for(int j = 0; j<10;j++)
+		{
+			printf("%c ",(board+(10*i+j)*sizeof(ELEM))->letter );
+		}
+		printf("\n");
+	}
 //    char str[30],inp[30];
 //    do
 //    {
@@ -172,7 +290,8 @@ int main()
 //            printf("Not found\n");
 //    }while(1);
 //    return 0;
-     generate_words(root,"teats");
+     //generate_words(root,"teats");
 
 
 }
+
